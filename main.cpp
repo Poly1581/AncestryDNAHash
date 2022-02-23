@@ -9,13 +9,16 @@ using namespace std;
 
 bool getSNP(ifstream&, snp*&);
 
-int menu(void) {
-	int input;
+string menu(void) {
+	string input;
 	cout << endl << "\tENTER MENU SELECTION:" << endl;
-	cout << "0: EXIT" << endl;
-	cout << "1: SHOW BY RSID" << endl;
-	cout << "2: OPEN SNPEDIA BY RSID" << endl;
-	cin >> input;
+	cout << "EXIT" << endl;
+	cout << "SHOW: SEARCH BY RSID" << endl;
+	cout << "OPEN: OPEN RSID PAGE IN SNPEDIA" << endl;
+	getline(cin,input);
+	for(unsigned i = 0; i < input.size(); i++) {
+		input.at(i) = tolower(input.at(i));
+	}
 	return input;
 }
 
@@ -38,26 +41,45 @@ int main() {
 			break;
 		}
 	}
-	int choice = menu();
+	string choice = menu();
 	string rsid;
-	while(choice != 0) {
-		if(choice == 1) {
-			cin >> rsid;
-			newSNP = Table.find(rsid);
+	int RSCode;
+	while(choice != "exit") {
+		if(choice == "show") {
+			getline(cin,rsid);
+
+			while(rsid.size() == 0) {
+				cout << "ERROR READING RSID, PLEASE ENTER AGAIN" << endl;
+				getline(cin,rsid);
+			}
+
+			if(rsid.at(0) == 'r') {
+				newSNP = Table.find(rsid);
+			} else {
+				newSNP = Table.find("rs"+rsid);
+			}
+
 			if(newSNP == nullptr) {
 				cout << "NOT FOUND" << endl;
 			} else {
 				newSNP->display();
 			}
-		} else if(choice == 2) {
-			cin >> rsid;
-			newSNP = Table.find(rsid);
+		} else if(choice == "open") {
+			getline(cin,rsid);
+
+			if(rsid.at(0) == 'r') {
+				newSNP = Table.find(rsid);
+			} else {
+				newSNP = Table.find("rs"+rsid);
+			}
+
 			if(newSNP == nullptr) {
 				cout << "NOT FOUND" << endl;
 			} else {
 				newSNP->display();
 				newSNP->openSNPedia();
 			}
+
 		} else {
 			cout << "INVALID CHOICE" << endl;
 		}
