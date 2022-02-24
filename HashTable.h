@@ -21,6 +21,7 @@ class HashTable {
 	bool contains(const string &);
 	void put(snp*);
 	snp* find(const string&);
+	snp* getRandom(void);
 
  private:
 	int computeHash(const string&);

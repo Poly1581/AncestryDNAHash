@@ -3,21 +3,71 @@
 #include "math.h"
 
 /* HashTable constructor
-*  input s is the size of the array
-*  set s to be size
-*  initialize array of lists of WordEntry
 */
 HashTable::HashTable (int s) {
 	size = s;
 	hashTable = new list<snp>[size];
 }
 
+/* contains
+*  Takes RSID string as input and checks whether or not 
+*  the hash table contains an SNP with that RSID by searching
+*/
+bool HashTable::contains(const string &s) {
+	return !(find(s)==nullptr);
+}
+
+/* put
+*  add snp to table by computing hash and adding in the correct place
+*/
+void HashTable::put(snp* node) {
+	int hash = computeHash(node->getRS());
+	snp* word= find(node->getRS());
+	if(word == nullptr) {
+		hashTable[hash].push_back(*node);
+	}
+}
+
+/* find
+*  Takes RSID string and finds the corresponding
+*  SNP (if it exists) in the table
+*/
+
+snp* HashTable::find(const string&s) {
+	int hash = computeHash(s);
+	for(auto& node : hashTable[hash]) {
+		if(node.getRS() == s) {
+			return &node;
+		}
+	}
+	return nullptr;
+}
+
+/* getRandom
+*  find a random SNP
+*/
+
+snp* HashTable::getRandom(void) {
+	int rHash = rand()%size;
+	list<snp> bucket = hashTable[rHash];
+	while(bucket.size() == 0) {
+		rHash = rand()%size;
+		bucket = hashTable[rHash];
+	}
+	int rPos = rand()%bucket.size();
+	for(auto& node : hashTable[rHash]) {
+		if(rPos == 0) {
+			return &node;
+		}
+		rPos--;
+	}
+	return nullptr;
+}
+
 
 /* computeHash
-*  return an integer based on the input string
-*  used for index into the array in hash table
-*  be sure to use the size of the array to 
-*  ensure array index doesn't go out of bounds
+*  compute the hash of a given RSID string
+*  by iterating over it and XORing it in different ways
 */
 int HashTable::computeHash(const string& s) {
 	int hash = 0;
@@ -33,39 +83,4 @@ int HashTable::computeHash(const string& s) {
 		hash = hash % size;
 	}
 	return hash % size;
-}
-
-
-/* put
-*  input: string word and int score to be inserted
-*  First, look to see if word already exists in hash table
-*   if so, addNewAppearence with the score to the WordEntry
-*   if not, create a new Entry and push it on the list at the
-*   appropriate array index
-*/
-void HashTable::put(snp* node) {
-	int hash = computeHash(node->getRS());
-	snp* word= find(node->getRS());
-	if(word == nullptr) {
-		hashTable[hash].push_back(*node);
-	}
-}
-
-/* contains
-* input: string word
-* output: true if word is in the hash table
-*         false if word is not in the hash table
-*/
-bool HashTable::contains(const string &s) {
-	return !(find(s)==nullptr);
-}
-
-snp* HashTable::find(const string&s) {
-	int hash = computeHash(s);
-	for(auto& node : hashTable[hash]) {
-		if(node.getRS() == s) {
-			return &node;
-		}
-	}
-	return nullptr;
 }

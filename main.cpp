@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -14,7 +16,8 @@ string menu(void) {
 	cout << endl << "\tENTER MENU SELECTION:" << endl;
 	cout << "EXIT" << endl;
 	cout << "SHOW: SEARCH BY RSID" << endl;
-	cout << "OPEN: OPEN RSID PAGE IN SNPEDIA" << endl;
+	cout << "OPEN: OPEN SNP PAGE IN SNPEDIA" << endl;
+	cout << "RANDOM: PICK RANDOM SNP AND OPEN IN SNPEDIA" << endl;
 	getline(cin,input);
 	for(unsigned i = 0; i < input.size(); i++) {
 		input.at(i) = tolower(input.at(i));
@@ -23,6 +26,7 @@ string menu(void) {
 }
 
 int main() {
+	srand(time(NULL));
 	HashTable Table = HashTable(50000);
 	string file = "AncestryDNA.txt";
 	ifstream input;
@@ -41,6 +45,7 @@ int main() {
 			break;
 		}
 	}
+
 	string choice = menu();
 	string rsid;
 	int RSCode;
@@ -80,6 +85,14 @@ int main() {
 				newSNP->openSNPedia();
 			}
 
+		} else if(choice == "random") {
+			newSNP = Table.getRandom();
+			if(newSNP == nullptr) {
+				cout << "ERROR WITH RANDOM SNP" << endl;
+			} else {
+				newSNP->display();
+				newSNP->openSNPedia();
+			}
 		} else {
 			cout << "INVALID CHOICE" << endl;
 		}
