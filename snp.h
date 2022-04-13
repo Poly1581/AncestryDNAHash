@@ -10,21 +10,7 @@ using namespace std;
 class snp {
 	public:
 		snp(const string& r, unsigned rc, unsigned short c, unsigned p, const string& a1, const string& a2) :
-			rs(r), rsCode(rc), chromosome(c), position(p), allele1(a1), allele2(a2), left(nullptr), right(nullptr), parent(nullptr){};
-		
-		snp* getParent(void) {return parent;};
-		snp* getLeft(void) {return left;};
-		snp* getRight(void) {return right;};
-		
-		void setParent(snp* p) {parent = p;};
-		void setLeft(snp* l) {left = l;};
-		void setRight(snp* r) {right = r;};
-
-		bool hasParent(void) {return (parent != nullptr);};
-		bool hasLeft(void) {return (left != nullptr);};
-		bool hasRight(void) {return (right != nullptr);};
-		bool isRoot(void) {return !hasParent();};
-		bool isLeaf(void) {return !hasLeft() && !hasRight();};
+			rs(r), rsCode(rc), chromosome(c), position(p), allele1(a1), allele2(a2){};
 
 		string getRS(void) {return rs;};
 		unsigned getRSCode(void) {return rsCode;};
@@ -51,10 +37,6 @@ class snp {
 		unsigned position;
 		string allele1;
 		string allele2;
-
-		snp* left;
-		snp* right;
-		snp* parent;
 };
 
 #endif
